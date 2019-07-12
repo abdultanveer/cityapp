@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.cityapp.R;
 import com.example.cityapp.data.City;
 import com.squareup.picasso.Picasso;
@@ -19,9 +20,10 @@ import java.util.LinkedList;
 public class RvAdapter extends RecyclerView.Adapter<RvAdapter.MyViewHolder> {
     private LayoutInflater inflater;
     private LinkedList<City> cityArrayList;
+    Context mContext;
 
     public RvAdapter(Context ctx, LinkedList<City> cities){
-
+        mContext = ctx;
         inflater = LayoutInflater.from(ctx);
         this.cityArrayList = cities;
     }
@@ -36,10 +38,19 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        Picasso.get().load(cityArrayList.get(position).getImageUrl()).into(holder.iv);
+       // Picasso.get().load(cityArrayList.get(position).getImageUrl()).into(holder.iv);
         holder.name.setText(cityArrayList.get(position).getName());
         holder.country.setText(cityArrayList.get(position).getCountry());
         holder.city.setText(cityArrayList.get(position).getCity());
+        Glide.with(mContext)
+                //.load(mImageUri) // Load image from assets
+                .load(cityArrayList.get(position).getImageUrl()) // Image URL
+                .centerCrop() // Image scale type
+                .crossFade()
+                .override(100,100) // Resize image
+                .placeholder(R.drawable.ic_launcher_background) // Place holder image
+                .error(R.drawable.ic_launcher_foreground) // On error image
+                .into(holder.iv); // ImageView to display image
 
     }
 
